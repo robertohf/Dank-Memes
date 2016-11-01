@@ -4,121 +4,140 @@
 #include <string.h>
 
 int initMenu();
-void ReadJson(char  *file, int orden);
+//void ReadJson(char  *file, int orden);
 void opcion(int opcion);
-void parsejson(char *opcion);
-
-//static struct CrearTabla ct[10];
+//void parsejson(char *opcion);
 
 
-struct CrearTabla{
-
-
-    char *nombre[30];
-    int id;
-    int orden;
-    char suboopciones;
-
-};
-
-struct ConsultarTabla{
-
-    char *nombre[30];
-    int id;
-    int orden;
-    char suboopciones;
-
-};
-
-struct EditarTabla{
-
-    char *nombre[30];
-    int id;
-    int orden;
-    char suboopciones;
-
-};
-
-struct ElimarTabla{
-
-    char *nombre[30];
-    int id;
-    int orden;
-    char suboopciones;
-
-};
-
-//I read the json file right here, lo que hace es agarrar la lineas en el file ya que es parcialmente "json"
-
-void ReadJson(char  *file, int orden)
+struct CrearTabla
 {
 
-  char Crear_tabla[100], Consultar_tabla[100], Editar_Tabla[100], Eliminar_Tabla[100];
-  FILE *fp;
+    char *nombre;
+    int id;
+    int orden;
 
-  fp = fopen(file,"r");
+    struct CrearTabla *next;
 
-  fscanf(fp, "%127[^\n]\n%127[^\n]\n%127[^\n]\n%127[^\n]", Crear_tabla, Consultar_tabla, Editar_Tabla, Eliminar_Tabla);
-  //printf("1: %s\n", Crear_tabla);
+};
 
-  fclose(fp);
+struct CrearTabla *ct_head = NULL;
+//struct CrearTabla *ct_current = NULL;
 
-  switch(orden){
-    case 1:
-      parsejson(Crear_tabla);
-      break;
-    case 2:
-      parsejson(Consultar_tabla);
-      break;
-    case 3:
-      parsejson(Editar_Tabla);
-      break;
-    case 4:
-      parsejson(Eliminar_Tabla);
-      break;
+struct CrearCampo
+{
+  char *nombre_campo;
+
+  struct CrearCampo *next;
+};
+
+struct CrearCampo *cc_head = NULL;
+//struct CrearCampo *cc_current = NULL;
+
+struct ConsultarTabla
+{
+
+    char *nombre;
+    int id;
+    int orden;
+
+};
+
+struct EditarTabla
+{
+
+    char *nombre;
+    int id;
+    int orden;
+    char subopciones;
+
+};
+
+struct ElimarTabla
+{
+
+    char *nombre;
+    int id;
+    int orden;
+
+};
+
+bool isEmpty()
+{
+  return ct_head == NULL;
+}
+
+void printTabla()
+{
+  struct CrearTabla *ptr = ct_head;
+  printf("\n[ ");
+
+  while(ptr != NULL){
+    printf("(%s,%d,%d) ", ptr->nombre,ptr->id,ptr->orden);
+    ptr = ptr->next;
+  }
+  printf(" ]");
+}
+
+void insertTabla(char *nombre, int id, int orden)
+{
+
+  struct CrearTabla *ptr = (struct CrearTabla*)malloc(sizeof(struct CrearTabla));
+
+  ptr->nombre = nombre;
+  ptr->id = id;
+  ptr->orden = orden;
+
+  ptr->next = ct_head;
+
+  ct_head = ptr;
+
+}
+
+struct CrearTabla *search(char *nombre)
+{
+
+  struct CrearTabla *current = ct_head;
+
+  if(ct_head == NULL){
+    return NULL;
   }
 
-}
+  while(current->nombre != nombre){
 
-//Aqui lo leo y las guardo ya en variables
+    if(current->next == NULL)
+      return NULL;
 
-void parsejson(char opcion[100])
-{
-  printf("\n");
-  const char delim[2] = "{~";
-  const char s[4] = "NULL";
-
-  char *token;
-  char nombre[10], idc[1], ordenc[1], subopciones[80];
-
-  //token = strtok(opcion, delim);
-
-  strcpy(nombre, strtok(opcion, delim));
-  strcpy(idc, strtok(NULL, "~"));
-  strcpy(ordenc, strtok(NULL, "~"));
-  strcpy(subopciones, strtok(NULL, "~}"));
-
-  int id = atoi(idc+1);
-  int orden = atoi(ordenc);
-
-  printf("Nombre: %s\n", nombre);
-  printf("Id: %d\n",id);
-  printf("Orden: %d\n", orden );
-  printf("Subopciones: %s\n", subopciones );
-
-}
-
-void addjson(char nombre[10], int id, int orden, char subopciones[80], int opcion)
-{
-  struct CrearTabla ct[10];
-
-  switch(opcion){
-    case 1:
-      break;
+    else
+      current = current->next;
   }
 
+  return current;
 
 }
+
+void printCampo()
+{
+  struct CrearCampo *ptr = cc_head;
+  printf("\n[ ");
+
+  while(ptr != NULL){
+    printf("%s | ", ptr->nombre_campo);
+    ptr = ptr->next;
+  }
+  printf("]");
+}
+
+void insertCampo(char* nombre_campo)
+{
+  struct CrearCampo *ptr = (struct CrearCampo*)malloc(sizeof(struct CrearCampo));
+
+  ptr->nombre_campo = nombre_campo;
+
+  ptr->next = cc_head;
+
+  cc_head = ptr;
+}
+
 
 int initMenu()
 {
@@ -147,19 +166,55 @@ void opcion(int orden)
     switch(orden){
 
     case 1:
-        ReadJson("Tables.json", orden);
-        printf("\n");
+        //ReadJson("Tables.json", orden);
+
+        insertTabla("Vehiculo", 1, 1);
+        insertTabla("Estudiante", 2, 2);
+        insertTabla("Ropa", 3, 3);
+        insertTabla("Donald Trump", 4, 4);
+
+        printf("\nLista de tablas disponibles: ");
+
+        printTabla();
+
+        printf("\n\n");
         break;
     case 2:
-        ReadJson("Tables.json", orden);
-        printf("\n");
+        //ReadJson("Tables.json", orden);
+        //char *n;
+
+        printf("\nQue tabla desea consultar? ");
+
+        struct CrearTabla *find = search("Vehiculo");
+
+        //scanf("%s\n", n);
+
+        //find = search(n);
+
+        if(find != NULL){
+          printf("\nElemento Encontrado!: " );
+          printf("(%s,%d,%d) ", find->nombre,find->id,find->orden);
+          insertCampo("Id");
+          insertCampo("Marca");
+          insertCampo("Modelo");
+          insertCampo("Anio");
+          insertCampo("Placa");
+
+          printCampo();
+
+          //printf("\n");
+        }
+        else
+          printf("Elemento no encontrado, Cree la Tabla primero");
+
+        printf("\n\n");
         break;
     case 3:
-        ReadJson("Tables.json", orden);
+        //ReadJson("Tables.json", orden);
         printf("\n");
         break;
     case 4:
-        ReadJson("Tables.json",orden);
+        //ReadJson("Tables.json",orden);
         printf("\n");
         break;
 
@@ -169,8 +224,6 @@ void opcion(int orden)
 
 int main(int argc, char *argv[])
 {
-    struct CrearTabla crear_tabla[10];
     initMenu();
-
     return 0;
 }
