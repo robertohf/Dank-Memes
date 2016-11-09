@@ -1,65 +1,26 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
-#include <string.h>
+#include "opciones.h"
 
 int initMenu();
-//void ReadJson(char  *file, int orden);
 void opcion(int opcion);
-//void parsejson(char *opcion);
 
-
-struct CrearTabla
-{
-
-    char *nombre;
-    int id;
-    int orden;
-
-    struct CrearTabla *next;
-
-};
 
 struct CrearTabla *ct_head = NULL;
-//struct CrearTabla *ct_current = NULL;
-
-struct CrearCampo
-{
-  char *nombre_campo;
-
-  struct CrearCampo *next;
-};
-
 struct CrearCampo *cc_head = NULL;
-//struct CrearCampo *cc_current = NULL;
 
-struct ConsultarTabla
+struct EncabezadoBloqueTabla *InterpretarEncabezado(char* data, int pos)
 {
+  EncabezadoBloqueTabla *eBt = malloc(sizeof(struct EncabezadoBloqueTabla));
 
-    char *nombre;
-    int id;
-    int orden;
+  memcpy(&(ebt->next),&(data[pos]), 4);
+  pos+=4;
+  memcpy(&(ebt->next),&(data[pos]), 4);
+  pos+=4;
+  memcpy(&(ebt->next),&(data[pos]), 4);
+  pos+=4;
 
-};
+  return eBt;
+}
 
-struct EditarTabla
-{
-
-    char *nombre;
-    int id;
-    int orden;
-    char subopciones;
-
-};
-
-struct ElimarTabla
-{
-
-    char *nombre;
-    int id;
-    int orden;
-
-};
 
 bool isEmpty()
 {
@@ -168,11 +129,12 @@ void insertCampo(char* nombre_campo)
 {
   struct CrearCampo *temp, *p;
   temp = (struct CrearCampo*)malloc(sizeof(struct CrearCampo));
-  temp->nombre_campo = nombre_campo;
+  //temp->nombre_campo = nombre_campo;
   p = cc_head;
   while(p->next != NULL){
     p = p->next;
   }
+  temp->nombre_campo = nombre_campo;
   p->next = temp;
   temp->next = NULL;
 }
