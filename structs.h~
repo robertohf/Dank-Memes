@@ -1,6 +1,20 @@
 #ifndef STRUCT_H  
 #define STRUCT_H   
 
+
+
+
+/*struct CrearTabla{
+
+    char *nombre;
+    int id;
+    int orden;
+
+    struct CrearTabla *next;
+
+};
+*/
+
 typedef struct {
   char nombre[20];
   int primerBloqueCampos;
@@ -13,12 +27,6 @@ typedef struct {
   int cant_Tablas;
   int tamano_registros;
 }EncabezadoBloqueTabla;
-
-typedef struct
-{
-	EncabezadoBloqueTabla *h;
-	Tabla* t;
-}BloqueTabla;
 
 
 
