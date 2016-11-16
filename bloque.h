@@ -3,7 +3,6 @@
 
 typedef struct 
 {
-	int PrimerBloque;
 	int CapacidadBloque;
 
 }Bloque;
@@ -16,6 +15,7 @@ void CreateBloque(int CapacidadBloque)
 	struct Bloque *tmp = malloc(sizeof(Bloque));
 
 	tmp->CapacidadBloque = CapacidadBloque;
+	//Agregar unas ciertas cantidad de tablas en el bloque, despues de llenar la capacidad crear un loque diferente... 
 
 	head = tmp;
 }
