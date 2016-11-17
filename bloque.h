@@ -1,27 +1,25 @@
 #ifndef BLOQUE_H 
 #define BLOQUE_H
-#define BLOCK_CAPACITY (4);
-#include "tabla.h"
-typedef struct Block Block;
 
 typedef struct 
 {
-	int size;//cantidad de tablas actualmente presente en bloque
-	Block* prev;
-	Block* next;
-}Block_h;
+	int CapacidadBloque;
 
-struct Block
+}Bloque;
+
+Bloque *next = NULL;
+Bloque *head = NULL;
+
+void CreateBloque(int CapacidadBloque)
 {
-	Block_h* header;
-	int capacity;
-	Table* table;
+	struct Bloque *tmp = malloc(sizeof(Bloque));
 
-};
+	tmp->CapacidadBloque = CapacidadBloque;
+	//Agregar unas ciertas cantidad de tablas en el bloque, despues de llenar la capacidad crear un loque diferente... 
 
-void create_block(int capacity, Block* previous);
-void clear_blocks(Block* b);
-void clear_block(Block* b);
+	head = tmp;
+}
+
 
 
 #endif

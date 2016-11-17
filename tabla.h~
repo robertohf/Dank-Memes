@@ -5,9 +5,6 @@ typedef struct
 	char nombre[20];
 	int primerBloqueCampos;
 	int primerBloqueRegistros;
-}Table;
-
-void fill_table(Tabla*);
-void del_table(Tabla*);
+}Tabla;
 
 #endif
