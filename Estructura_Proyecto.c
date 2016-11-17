@@ -1,145 +1,13 @@
-#include "structs.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+
 #include "tabla.h"
+#include "bloque.h"
 
 int initMenu();
 void opcion(int opcion);
-
-
-struct CrearTabla *ct_head = NULL;
-struct CrearCampo *cc_head = NULL;
-
-struct EncabezadoBloqueTabla *InterpretarEncabezado(char* data, int pos)
-{
-  EncabezadoBloqueTabla *ebt = malloc(sizeof(EncabezadoBloqueTabla));
-
-  memcpy(&(ebt->next),&(data[pos]), 4);
-  pos+=4;
-  memcpy(&(ebt->next),&(data[pos]), 4);
-  pos+=4;
-  memcpy(&(ebt->next),&(data[pos]), 4);
-  pos+=4;
-
-  return ebt;
-}
-
-
-bool isEmpty()
-{
-  return ct_head == NULL;
-}
-
-void printTabla()
-{
-  struct CrearTabla *ptr = ct_head;
-  printf("\n[ ");
-
-  while(ptr != NULL){
-    printf("(%s,%d,%d) ", ptr->nombre,ptr->id,ptr->orden);
-    ptr = ptr->next;
-  }
-  printf(" ]");
-}
-
-void insertTabla(char *nombre, int id, int orden)
-{
-
-  struct CrearTabla *ptr = (struct CrearTabla*)malloc(sizeof(struct CrearTabla));
-
-  ptr->nombre = nombre;
-  ptr->id = id;
-  ptr->orden = orden;
-
-  ptr->next = ct_head;
-
-  ct_head = ptr;
-
-}
-
-struct CrearTabla *search(char* nombre)
-{
-
-  struct CrearTabla *current = ct_head;
-
-  if(ct_head == NULL){
-    return NULL;
-  }
-
-  while(strcmp(current->nombre, nombre) != 0){
-    if(current->next == NULL)
-      return NULL;
-
-    else
-      current = current->next;
-
-  }
-
-  return current;
-
-}
-
-struct CrearTabla *delete(char *nombre)
-{
-  struct CrearTabla *current = ct_head;
-  struct CrearTabla *previous = NULL;
-
-  if(ct_head == NULL){
-    return NULL;
-  }
-
-  while(strcmp(current->nombre, nombre) != 0){
-    if(current->next == NULL){
-      return NULL;
-    }
-    else{
-    previous = current;
-    current = current->next;
-    }
-  }
-
-  if(current == ct_head)
-    ct_head = ct_head->next;
-  else
-    previous->next = current->next;
-
-  return current;
-
-}
-
-void printCampo()
-{
-  struct CrearCampo *ptr = cc_head;
-  printf("\n[ | ");
-
-  while(ptr != NULL){
-    printf("%s | ", ptr->nombre_campo);
-    ptr = ptr->next;
-  }
-  printf("]");
-}
-
-struct CrearCampo *addbeg(char* nombre)
-{
-  struct CrearCampo *temp = (struct CrearCampo*)malloc(sizeof(struct CrearCampo));
-  temp->nombre_campo = nombre;
-  temp->next = cc_head;
-  cc_head = temp;
-  return cc_head;
-}
-
-void insertCampo(char* nombre_campo)
-{
-  struct CrearCampo *temp, *p;
-  temp = (struct CrearCampo*)malloc(sizeof(struct CrearCampo));
-  //temp->nombre_campo = nombre_campo;
-  p = cc_head;
-  while(p->next != NULL){
-    p = p->next;
-  }
-  temp->nombre_campo = nombre_campo;
-  p->next = temp;
-  temp->next = NULL;
-}
-
 
 int initMenu()
 {
@@ -169,96 +37,24 @@ void opcion(int orden)
     switch(orden){
 
     case 1:
-        //ReadJson("Tables.json", orden);
-
-        insertTabla("Vehiculo", 1, 1);
-        insertTabla("Estudiante", 2, 2);
-        insertTabla("Ropa", 3, 3);
-        insertTabla("Casa", 4, 4);
-
-        printf("\nLista de tablas disponibles: ");
-
-        printTabla();
 
         printf("\n\n");
         break;
     case 2:
 
-        printf("\nQue tabla desea consultar? ");
-
-        char buffer[20];
-        char *n = buffer;
-        scanf(" %s", n);
-
-        struct CrearTabla *find = search(n);
-
-        if(find != NULL){
-          printf("\nElemento Encontrado!: " );
-          printf("(Tabla:%s, Id:%d,) ", find->nombre,find->id);
-
-          printCampo();
-
-        }
-        else
-          printf("Elemento no encontrado, Cree la Tabla primero");
-
         printf("\n\n");
-        break;
+        //break;
     case 3:
 
       printf("\nQue tabla desea Editar? ");
-
-      //struct CrearTabla *find;
-      char buffer1[20];
-      char *n1 = buffer1;
-      scanf(" %s", n1);
-
-      struct CrearTabla *seek = search(n1);
-
-      if(seek != NULL){
-        printf("\nTabla Encontrada." );
-        printf("(Tabla:%s, Id:%d) ", seek->nombre,seek->id);
-
-        printf("\nIngresar campo: ");
-        char buff[20];
-        char *campo = buff;
-        scanf(" %s",campo);
-
-        if(cc_head == NULL)
-          addbeg(campo);
-        else
-          insertCampo(campo);
-
-        printCampo();
-
-      }
-      else
-        printf("Elemento no encontrado, Cree la Tabla primero");
 
       printf("\n\n");
       break;
     case 4:
 
-        printf("\nQue tabla desea eliminar? ");
-
-        char buffer2[20];
-        char *n2 = buffer2;
-        scanf(" %s", n2);
-
-        struct CrearTabla *del = delete(n2);
-
-        if(del != NULL){
-          printf("\nBorrando Elemento...." );
-          printf("(Tabla:%s, Id:%d) ", del->nombre,del->id);
-          printTabla();
-        }
-        else
-          printf("Elemento no encontrado");
-
-        printf("\n\n");
         break;
     case 5:
-	printTabla();
+	//printTabla();
 	break;
     case 6:
       exit(0);

@@ -1,2 +1,3 @@
 all:
-	gcc -o project Estructura_Proyecto.c -I.
+	gcc -o databases Estructura_Proyecto.c bloque.c -std=c99
+
